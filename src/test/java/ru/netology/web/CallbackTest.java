@@ -68,31 +68,44 @@ class CallbackTest {
         List<WebElement> elements = driver.findElements(By.className("input__control"));
         elements.get(0).sendKeys("Василий");
         elements.get(1).sendKeys("+79270000000");
-        var check = driver.findElement(By.className("checkbox__box"));
+//        var check = driver.findElement(By.className("checkbox__box"));
+        var check = driver.findElement(By.cssSelector("[data-test-id=agreement]"));
         System.out.println("WAS "+check.isSelected());
-        driver.findElement(By.className("checkbox__box")).click();
-        System.out.println("NOW "+check.isSelected());
-        driver.findElement(By.className("button")).click();
         try {
-            Thread.sleep(5000);
+            check.click();
+        }catch (Exception e){
+            System.err.println("Click dont work");
+        }
+        check.submit();
+        System.out.println("NOW "+check.isSelected());
+
+        driver.findElement(By.className("button")).click();
+        driver.findElement(By.className("button")).submit();
+
+        WebElement form = driver.findElement(By.className("form"));
+        form.submit();
+        try {
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         String text = driver.findElement(By.className("paragraph")).getText();
-        System.out.println(text);
-        assertEquals("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.", text.trim());
+        System.out.println(text);assertEquals("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.", text.trim());
     }
 
-   // @Test
-    void shouldTestV2() {
-//        WebElement form = driver.findElement(By.cssSelector("[data-test-id=callback-form]"));
-        WebElement form = driver.findElement(By.className("form"));
-        form.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Василий");
-        form.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79270000000");
-        form.findElement(By.cssSelector("[data-test-id=agreement]")).click();
-//        form.findElement(By.cssSelector("[data-test-id=submit]")).click();
-        String text = driver.findElement(By.className("alert-success")).getText();
-        assertEquals("Ваша заявка успешно отправлена!", text.trim());
+
+    @Test
+    void badPhoneTest() {
+        List<WebElement> elements = driver.findElements(By.className("input__control"));
+        elements.get(0).sendKeys("Василий");
+        elements.get(1).sendKeys("+7927");
+        elements.get(1).submit();
+
+        String text = driver.findElement(By.cssSelector("[data-test-id=phone] span.input__sub")).getText();
+        System.out.println(text);
+        assertEquals("Телефон указан неверно", text.trim().substring(0,22));
+
     }
+
 }
 
