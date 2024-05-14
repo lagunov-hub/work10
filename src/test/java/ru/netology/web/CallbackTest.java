@@ -26,30 +26,19 @@ class CallbackTest {
     @BeforeAll
     static void setUpAll() {
 
-//        ChromeDriverService service = new ChromeDriverService.Builder()
-//                .usingDriverExecutable(new File("/Users/segolov/Downloads/chromedriver-mac-x64/chromedriver"))
-////                .usingChromeDriverExecutable(new File("path/to/my/chromedriver"))
-////                .usingPort(9515)
-//                .usingAnyFreePort()
-//                .build();
-//        try {
-//            service.start();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-        WebDriverManager.safaridriver().setup();
-    //chromedriver().setup();
+        WebDriverManager.chromedriver().setup(); //.safaridriver().setup();
+
     }
 
     @BeforeEach
     void setUp() {
-//        ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--disable-dev-shm-usage");
-//        options.addArguments("--no-sandbox");
-//        options.addArguments("--headless");
-//        driver = new ChromeDriver(options);
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--headless");
+        driver = new ChromeDriver(options);
 
-        driver = new SafariDriver();
+//        driver = new SafariDriver();
         driver.get("http://localhost:9999");
     }
 
