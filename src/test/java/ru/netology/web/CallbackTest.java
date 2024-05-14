@@ -11,6 +11,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
@@ -48,9 +49,7 @@ class CallbackTest {
 //        options.addArguments("--headless");
 //        driver = new ChromeDriver(options);
 
-
         driver = new SafariDriver();
-
         driver.get("http://localhost:9999");
     }
 
@@ -64,37 +63,6 @@ class CallbackTest {
     }
 
     @Test
-    void shouldTestV1() {
-        List<WebElement> elements = driver.findElements(By.className("input__control"));
-        elements.get(0).sendKeys("Василий");
-        elements.get(1).sendKeys("+79270000000");
-//        var check = driver.findElement(By.className("checkbox__box"));
-        var check = driver.findElement(By.cssSelector("[data-test-id=agreement]"));
-        System.out.println("WAS "+check.isSelected());
-        try {
-            check.click();
-        }catch (Exception e){
-            System.err.println("Click dont work");
-        }
-        check.submit();
-        System.out.println("NOW "+check.isSelected());
-
-        driver.findElement(By.className("button")).click();
-        driver.findElement(By.className("button")).submit();
-
-        WebElement form = driver.findElement(By.className("form"));
-        form.submit();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        String text = driver.findElement(By.className("paragraph")).getText();
-        System.out.println(text);assertEquals("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.", text.trim());
-    }
-
-
-    @Test
     void badPhoneTest() {
         List<WebElement> elements = driver.findElements(By.className("input__control"));
         elements.get(0).sendKeys("Василий");
@@ -106,6 +74,34 @@ class CallbackTest {
         assertEquals("Телефон указан неверно", text.trim().substring(0,22));
 
     }
+
+    @Test
+    void shouldTestV1() {
+        List<WebElement> elements = driver.findElements(By.className("input__control"));
+        elements.get(0).sendKeys("Василий");
+        elements.get(1).sendKeys("+79270000000");
+
+//        var check = driver.findElement(By.className("checkbox__box"));
+        var check = driver.findElement(By.cssSelector("[data-test-id=agreement]"));
+        //WebElement check = driver.findElement(By.cssSelector(".checkbox input"));
+        new Actions(driver)
+                .moveToElement(check)
+                .click(check)
+                .perform();
+
+        WebElement form = driver.findElement(By.className("form"));
+        form.submit();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        String text = driver.findElement(By.className("paragraph")).getText();
+        System.out.println(text);assertEquals("  Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.", text.trim());
+    }
+
+
+
 
 }
 
